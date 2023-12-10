@@ -1,0 +1,22 @@
+body {
+  background-color: #f1f1f1;
+  font-family: "Open Sans", sans-serif;
+}
+
+h2,
+nav,
+nav.a {
+  font-family: "Inter", sans-serif;
+}
+
+div.col:hover,
+button:hover,
+a:hover {
+  scale: 1.1;
+}
+
+#nav {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}

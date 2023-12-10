@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Dichiarazioni meta e titolo della pagina -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>U2-W3-D5 - CRUDAZON</title>
+
+    <!-- Collegamento ai fogli di stile Bootstrap e font personalizzato -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@800&family=Open+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Collegamento a un foglio di stile personalizzato -->
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <!-- Barra di navigazione -->
+    <div id="nav">
+      <nav class="navbar navbar-expand-lg" style="background-color: #383838">
+        <div class="container-fluid text-light">
+          <!-- Logo e nome del sito -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            fill="currentColor"
+            class="bi bi-bag me-2 mb-1"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"
+            />
+          </svg>
+          <a class="navbar-brand text-light" href="./index.html"> CRUDAZON</a>
+
+          <!-- Pulsante hamburger per dispositivi mobili -->
+          <button
+            class="navbar-toggler bg-light"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <!-- Elementi della barra di navigazione -->
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link active text-light" aria-current="page" href="./index.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-light" href="./backoffice.html">Backoffice</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Contenitore principale della pagina -->
+    <div class="container-md mb-5">
+      <div class="row justify-content-center">
+        <div class="col-10 text-center">
+          <!-- Titolo della sezione -->
+          <h2 class="mt-5 mb-5">Prodotti Disponibili</h2>
+
+          <!-- Contenitore per le card dei prodotti -->
+          <div id="card-list" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3"></div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      // URL dell'API e token di autenticazione
+      const URL = "https://striveschool-api.herokuapp.com/api/product/";
+      const token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTcxZGMzNTBkOGEyMDAwMThhNDhhNjkiLCJpYXQiOjE3MDE5NjA3NTcsImV4cCI6MTcwMzE3MDM1N30.xPmJxR6l1k7hwV6tBVHRmMJbDVoNmX_hi5FPrSv_HZs";
+
+      // Funzione per ottenere i dati dall'API e visualizzare i prodotti
+      const fetchData = () => {
+        fetch(URL, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => {
+            console.log(response);
+            // Controlli di guardia per gestire gli errori di risposta
+            if (response.status === 404) throw new Error("Errore, risorsa non trovata");
+            if (response.status >= 400 && response.status < 500) throw new Error("Errore lato Client");
+            if (response.status >= 500 && response.status < 600) throw new Error("Errore lato Server");
+            if (!response.ok) throw new Error("Errore nel reperimento dei dati");
+
+            // Ritorna i dati in formato JSON
+            return response.json();
+          })
+          .then((products) => {
+            // Ottiene il contenitore delle card
+            const cardListContainer = document.getElementById("card-list");
+
+            // Itera sui dati ottenuti e crea dinamicamente le card dei prodotti
+            products.forEach((product) => {
+              const cardDiv = document.createElement("div");
+              cardDiv.className = "col";
+              cardDiv.innerHTML = `<div class="card shadow-sm h-100 ">
+                    <img src="${product.imageUrl}" class="img-fluid card-img-top" alt="immagine prodotto">
+                        <div class="card-body">
+                        <h4 class="card-title">${product.name}</h4>
+                        <p class="fs-6"><b>Sku:</b> ${product._id.slice(4, 9)}</p>
+                         <p class="fs-5"><b>Prezzo: </b>€ ${product.price},00</p>
+                        <div>
+                          <a href="./details.html?resourceId=${
+                            product._id
+                          }"><button class="btn btn-warning">SCOPRI DI PIU'</button></a>
+                        </div>
+                    </div>
+                </div>`;
+
+              // Aggiunge la card al contenitore
+              cardListContainer.appendChild(cardDiv);
+            });
+          })
+          .catch((err) => {
+            // Gestione degli errori
+            console.log("SI STA VERIFICANDO UN PROBLEMA GRAVE: ", err);
+          });
+      };
+
+      // Event listener che avvia la funzione fetchData quando la pagina è completamente caricata
+      window.addEventListener("DOMContentLoaded", () => {
+        fetchData();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Metadati della pagina -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>U2-W3-D5 - CRUDAZON</title>
+
+    <!-- Collegamento al foglio di stile di Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+
+    <!-- Collegamento alle fonti di Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@800&family=Open+Sans:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Collegamento al foglio di stile personalizzato -->
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+
+  <body>
+    <!-- Barra di navigazione -->
+    <div id="nav">
+      <nav class="navbar navbar-expand-lg" style="background-color: #383838">
+        <div class="container-fluid text-light">
+          <!-- Icona del carrello -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            fill="currentColor"
+            class="bi bi-bag me-2 mb-1"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"
+            />
+          </svg>
+          <!-- Testo del brand e link alla home -->
+          <a class="navbar-brand text-light" href="./index.html"> CRUDAZON</a>
+
+          <!-- Bottone di toggle per la navigazione su dispositivi mobili -->
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <!-- Elementi della barra di navigazione -->
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <!-- Link alla home -->
+              <li class="nav-item">
+                <a class="nav-link text-light" aria-current="page" href="./index.html">Home</a>
+              </li>
+              <!-- Link al backoffice -->
+              <li class="nav-item">
+                <a class="nav-link active text-light" href="./backoffice.html">Backoffice</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Contenuto della pagina -->
+    <div class="container-md">
+      <div class="row justify-content-center">
+        <div class="col-8">
+          <div class="my-4">
+            <!-- Titolo del Back-Office -->
+            <h2 class="display-4 d-inline-block">Back-Office</h2>
+            <!-- Sottotitolo dinamico -->
+            <h4 id="subtitle" class="text-center bg-warning"></h4>
+            <!-- Spinner di caricamento (nascosto inizialmente) -->
+            <div class="spinner-border text-warning fs-5 d-none" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+
+          <hr />
+
+          <!-- Area per messaggi di avviso -->
+          <div id="alert-box"></div>
+
+          <!-- Form per l'aggiunta e la modifica di prodotti -->
+          <form onsubmit="handleSubmit(event)">
+            <div class="mb-3">
+              <label for="brand" class="form-label">Brand:</label>
+              <input
+                type="text"
+                class="form-control"
+                id="brand"
+                placeholder="Inserisci il nome del prodotto"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="name" class="form-label">Nome Prodotto:</label>
+              <input type="text" class="form-control" id="name" placeholder="Inserisci il nome del prodotto" required />
+            </div>
+            <div class="mb-3">
+              <label for="description" class="form-label">Descrizione:</label>
+              <textarea
+                type="text"
+                class="form-control"
+                id="description"
+                placeholder="Inserisci la descrizione"
+                required
+              ></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="imageUrl" class="form-label">Immagine:</label>
+              <textarea
+                type="text"
+                class="form-control"
+                id="imageUrl"
+                placeholder="Inserisci l'URL dell'immagine"
+                required
+              ></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="price" class="form-label">Prezzo:</label>
+              <input type="number" class="form-control" id="price" placeholder="€" />
+            </div>
+
+            <!-- Pulsanti per Aggiungi Prodotto, Reset e Elimina Prodotto -->
+            <div class="d-flex justify-content-between">
+              <button type="submit" class="btn btn-secondary">
+                Aggiungi Prodotto
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="25"
+                  height="25"
+                  fill="currentColor"
+                  class="bi bi-plus-circle ms-2"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                  <path
+                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"
+                  />
+                </svg>
+              </button>
+              <button type="reset" class="btn btn-warning">
+                Reset
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="25"
+                  height="25"
+                  fill="currentColor"
+                  class="bi bi-x-circle ms-2"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                  <path
+                    d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"
+                  />
+                </svg>
+              </button>
+              <button type="button" class="btn btn-danger d-none" onclick="handleDelete()">
+                Elimina Prodotto
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="25"
+                  height="25"
+                  fill="currentColor"
+                  class="bi bi-trash3 ms-2"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"
+                  />
+                </svg>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      // Token di autenticazione
+      const token =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTcxZGMzNTBkOGEyMDAwMThhNDhhNjkiLCJpYXQiOjE3MDE5NjA3NTcsImV4cCI6MTcwMzE3MDM1N30.xPmJxR6l1k7hwV6tBVHRmMJbDVoNmX_hi5FPrSv_HZs";
+
+      // Recupera l'ID della risorsa dalla query string
+      const resourceId = new URLSearchParams(window.location.search).get("resourceId");
+      console.log("RESOURCE ID: ", resourceId);
+
+      // Costruisci l'URL in base alla presenza o meno di un resourceId
+      const URL = resourceId
+        ? "https://striveschool-api.herokuapp.com/api/product/" + resourceId
+        : "https://striveschool-api.herokuapp.com/api/product/";
+      console.log("URL: ", URL);
+
+      // Determina il metodo HTTP da utilizzare (POST o PUT) in base alla presenza o meno di un resourceId
+      const method = resourceId ? "PUT" : "POST";
+      console.log("method: ", method);
+
+      // Quando la pagina è completamente caricata
+      window.addEventListener("DOMContentLoaded", () => {
+        // Seleziona i pulsanti e l'elemento del sottotitolo
+        const submitBtn = document.querySelector("button[type='submit']");
+        const resetBtn = document.querySelector("button[type='reset'].btn-warning");
+        const deleteBtn = document.querySelector("button[type='button'].btn-danger");
+        const subtitle = document.getElementById("subtitle");
+
+        // Se è presente un resourceId, modifica l'interfaccia per la modifica del prodotto
+        if (resourceId) {
+          subtitle.innerText = "--- Modifica Prodotto ---";
+
+          // Aggiorna il pulsante di invio per riflettere l'azione di modifica
+          submitBtn.classList.remove("btn-danger");
+          submitBtn.classList.add("btn-success");
+          submitBtn.innerHTML = `Modifica Prodotto 
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                        class="bi bi-pencil-square ms-2" viewBox="0 0 16 16">
+                        <path
+                            d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                        <path fill-rule="evenodd"
+                            d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z" />
+                    </svg>`;
+
+          // Rendi visibile il pulsante di eliminazione
+          deleteBtn.classList.remove("d-none");
+
+          // Carica i dati del prodotto per la modifica
+          isLoading(true);
+          fetch(URL, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          })
+            .then((resp) => resp.json())
+            .then(({ brand, name, description, imageUrl, price }) => {
+              document.getElementById("brand").value = brand;
+              document.getElementById("name").value = name;
+              document.getElementById("description").value = description;
+              document.getElementById("imageUrl").value = imageUrl;
+              document.getElementById("price").value = price;
+            })
+            .finally(() => isLoading(false));
+        } else {
+          subtitle.innerText = "--- Aggiungi Nuovo Prodotto ---";
+        }
+      });
+
+      // Gestisci l'invio del modulo
+      const handleSubmit = (event) => {
+        event.preventDefault();
+
+        const form = event.target;
+
+        // Costruisci l'oggetto del nuovo prodotto dai dati del modulo
+        const newProduct = {
+          brand: document.getElementById("brand").value,
+          name: document.getElementById("name").value,
+          imageUrl: document.getElementById("imageUrl").value,
+          description: document.getElementById("description").value,
+          price: document.getElementById("price").value,
+        };
+
+        // Rendi visibile lo spinner di caricamento
+        isLoading(true);
+
+        // Esegui la richiesta HTTP con il metodo appropriato
+        fetch(URL, {
+          method,
+          body: JSON.stringify(newProduct),
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        })
+          .then((resp) => resp.json())
+          .then((createdObj) => {
+            // Visualizza un avviso di successo
+            if (resourceId) {
+              showAlert("Risorsa con id: " + createdObj._id + " modificata con successo!", "success");
+            } else {
+              showAlert("Risorsa con id: " + createdObj._id + " creata con successo!");
+
+              // Resetta il modulo dopo la creazione di un nuovo prodotto
+              form.reset();
+            }
+          })
+          .finally(() => isLoading(false));
+      };
+
+      // Funzione di utilità per gestire la visualizzazione dello spinner di caricamento
+      const isLoading = (boolean) => {
+        const spinner = document.querySelector(".spinner-border");
+
+        if (boolean) {
+          spinner.classList.remove("d-none");
+        } else {
+          spinner.classList.add("d-none");
+        }
+      };
+
+      // Funzione di utilità per visualizzare un avviso temporaneo
+      const showAlert = (message, colorCode = "success") => {
+        const alertBox = document.getElementById("alert-box");
+        alertBox.innerHTML = `<div class="alert alert-${colorCode}" role="alert">
+                                  ${message}
+                                  </div>`;
+
+        setTimeout(() => {
+          alertBox.innerHTML = "";
+        }, 3000);
+      };
+
+      // Gestisci l'eliminazione del prodotto
+      const handleDelete = () => {
+        // Chiedi conferma prima di eliminare il prodotto
+        const hasConfirmed = confirm("Sei sicuro di voler eliminare il prodotto selezionato?");
+
+        if (hasConfirmed) {
+          // Rendi visibile lo spinner di caricamento
+          isLoading(true);
+
+          // Esegui la richiesta HTTP per eliminare il prodotto
+          fetch(URL, {
+            method: "DELETE",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          })
+            .then((resp) => {
+              if (resp.ok) {
+                return resp.json();
+              }
+            })
+            .then((deletedObj) => {
+              // Visualizza un avviso di eliminazione con successo
+              showAlert("Hai eliminato il prodotto " + deletedObj.name + " code: " + deletedObj._id, "danger");
+
+              // Reindirizza alla pagina principale dopo qualche secondo
+              setTimeout(() => {
+                window.location.assign("./index.html");
+              }, 3000);
+            })
+            .finally(() => {
+              // Rendi invisibile lo spinner di caricamento
+              isLoading(false);
+            });
+        }
+      };
+    </script>
+  </body>
+</html>
